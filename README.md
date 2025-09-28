@@ -67,6 +67,8 @@ curl --location 'http://localhost:8080/events?year=2025&session_type=Race&countr
 
 POST /bets → Place a bet
 
+For the "user_id", any string can be used.
+
 curl --location 'http://localhost:8080/bets' \
 --header 'Content-Type: application/json' \
 --data '{
@@ -85,7 +87,8 @@ curl --location 'http://localhost:8080/events/9693/outcome' \
   "driver_id": 18
 }'
 
-
+It's possible to check the outcome result usiong a Mongo client and checking the users collection for the balance, and 
+the bets collection for the bets results.
 
 Useful Commands
 
