@@ -36,13 +36,12 @@ public class EventService implements EventQuery, EventCommand {
 
     @Override
     public Completable eventOutcome(final Integer sessionId, final Integer driverId) {
-        // 1. Bets that WON
+
         Flowable<BetEntity> winningBets = betRepository.findBySessionKeyAndDriverNumber(sessionId, driverId);
 
         Completable winners = winningBets.flatMapCompletable(bet -> {
             BigDecimal payout = bet.amount().multiply(BigDecimal.valueOf(bet.odds())); // assuming odds are stored
 
-            // update bet status
             BetEntity updatedBet = new BetEntity(
                     bet.id(),
                     bet.userId(),
@@ -53,7 +52,6 @@ public class EventService implements EventQuery, EventCommand {
                     bet.odds()
             );
 
-            // credit user balance
             Completable updateUser = Maybe.fromPublisher(userRepository.findByUserId(bet.userId()))
                     .flatMapCompletable(user -> {
                         UserEntity credited = new UserEntity(
@@ -69,7 +67,6 @@ public class EventService implements EventQuery, EventCommand {
             return Completable.mergeArray(updateUser, updateBet);
         });
 
-        // 2. Bets that LOST (same session, different driver)
         Flowable<BetEntity> losingBets = betRepository.findBySessionKey(sessionId)
                 .filter(b -> !b.driverNumber().equals(driverId));
 
@@ -86,7 +83,6 @@ public class EventService implements EventQuery, EventCommand {
             return Completable.fromPublisher(betRepository.update(updatedBet));
         });
 
-        // 3. Run both updates
         return Completable.mergeArray(winners, losers);
     }
 
