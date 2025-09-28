@@ -1,0 +1,41 @@
+services:
+  mongo:
+    image: mongo:latest
+    container_name: mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: mydb
+    volumes:
+      - mongo_data:/data/db
+
+  app:
+    build: .
+    container_name: sporty-f1
+    restart: unless-stopped
+    depends_on:
+      - mongo
+    environment:
+      MONGO_URI: mongodb://mongo:27017/mydb
+    ports:
+      - "8080:8080"
+
+  mongo-seed:
+    image: mongo:latest
+    depends_on:
+      - mongo
+    volumes:
+      - ./seed:/seed
+    entrypoint: >
+      sh -c "
+            mongoimport --host mongo --db mydb --collection drivers --drop --file /seed/drivers.json --jsonArray &&
+            mongoimport --host mongo --db mydb --collection sessions --drop --file /seed/sessions.json --jsonArray &&
+            mongosh --host mongo mydb --eval '
+              db.drivers.createIndex({ session_key: 1 });
+              db.sessions.createIndex({ sessionType: 1, year: 1, countryName: 1 });
+            '
+          "
+
+volumes:
+  mongo_data:

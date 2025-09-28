@@ -1,21 +1,29 @@
-package com.sporty.adapter.in.rest;
+package com.sporty.adapter.in.rest.event;
 
+import com.sporty.application.port.in.EventCommand;
 import com.sporty.application.port.in.EventQuery;
 import com.sporty.domain.Event;
+import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
+import io.micronaut.http.annotation.PathVariable;
+import io.micronaut.http.annotation.Post;
 import io.micronaut.http.annotation.QueryValue;
+import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.functions.Function;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.Optional;
 
 @Controller
 public class EventsController {
     private final EventQuery eventQuery;
+    private final EventCommand eventCommand;
 
-    public EventsController(final EventQuery eventQuery) {
+    public EventsController(final EventQuery eventQuery, final EventCommand eventCommand) {
         this.eventQuery = eventQuery;
+        this.eventCommand = eventCommand;
     }
 
     @Get("/events")
@@ -33,8 +41,17 @@ public class EventsController {
                 .map(buildResponse());
     }
 
+    @Post("/events/{sessionId}/outcome")
+    public Completable fetchEventOutcome(
+            @PathVariable @NotNull Integer sessionId,
+            @Body OutcomeRequest outcomeRequest
+    ) {
+        return eventCommand.eventOutcome(sessionId, outcomeRequest.driverId());
+    }
+
     private static Function<Event, EventResponse> buildResponse() {
         return r -> new EventResponse(
+                r.sessionId(),
                 r.countryName(),
                 r.circuitName(),
                 r.dateEnd(),
@@ -42,7 +59,8 @@ public class EventsController {
                 r.location(),
                 r.sessionName(),
                 r.sessionType(),
-                r.year()
+                r.year(),
+                r.drivers()
         );
     }
 }

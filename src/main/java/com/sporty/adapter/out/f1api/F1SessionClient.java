@@ -1,4 +1,4 @@
-package com.sporty.adapter.out;
+package com.sporty.adapter.out.f1api;
 
 
 import io.micronaut.core.annotation.Nullable;
@@ -15,5 +15,10 @@ public interface F1SessionClient {
             @QueryValue("session_type") @Nullable String sessionType,
             @QueryValue("year") @Nullable Integer year,
             @QueryValue("country_name") @Nullable String countryName
+    );
+
+    @Get("/drivers")
+    Flowable<Driver> getRaceDrivers(
+            @QueryValue("session_key") @Nullable String sessionKey
     );
 }

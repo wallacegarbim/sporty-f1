@@ -16,6 +16,9 @@ dependencies {
     annotationProcessor("io.micronaut.openapi:micronaut-openapi")
     annotationProcessor("io.micronaut.openapi:micronaut-openapi-adoc")
     annotationProcessor("io.micronaut.serde:micronaut-serde-processor")
+    annotationProcessor("io.micronaut.data:micronaut-data-document-processor")
+    implementation("io.micronaut.data:micronaut-data-mongodb")
+    implementation("io.micronaut.mongodb:micronaut-mongo-reactive")
     implementation("io.micronaut:micronaut-http-client")
     implementation("io.micronaut.redis:micronaut-redis-lettuce")
     implementation("io.micronaut.rxjava3:micronaut-rxjava3")
@@ -24,9 +27,11 @@ dependencies {
     implementation("jakarta.annotation:jakarta.annotation-api")
     compileOnly("io.micronaut.openapi:micronaut-openapi-annotations")
     runtimeOnly("ch.qos.logback:logback-classic")
+    runtimeOnly("org.mongodb:mongodb-driver-reactivestreams")
     testImplementation("org.apache.commons:commons-compress:1.27.1")
     testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("org.testcontainers:testcontainers")
+    testImplementation("org.testcontainers:mongodb:1.20.2")
 }
 
 
