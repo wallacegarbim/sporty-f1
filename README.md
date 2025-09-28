@@ -46,16 +46,23 @@ Start a MongoDB instance
 Build and run the sporty-f1 service
 Import F1 driver/session data into MongoDB on startup
 
-Access the API
+## ▶️ Access the API
 
 Once running, the API will be available at:
+
+
 http://localhost:8080
 
-Testing with Curl
 
-GET /events → Fetch available events
+---
 
+## 🧪 Testing with Curl
+
+### GET /events → Fetch available events
+
+```bash
 curl --location 'http://localhost:8080/events?year=2025&session_type=Race&country_name=China'
+
 
 
 POST /bets → Place a bet
@@ -63,19 +70,21 @@ POST /bets → Place a bet
 curl --location 'http://localhost:8080/bets' \
 --header 'Content-Type: application/json' \
 --data '{
-"user_id": "1",
-"session_id": 9693,
-"driver_id": 18,
-"amount": "30"
+  "user_id": "1",
+  "session_id": 9693,
+  "driver_id": 18,
+  "amount": "30"
 }'
+
 
 POST /events/{sessionId}/outcome → Apply a race outcome
 
 curl --location 'http://localhost:8080/events/9693/outcome' \
 --header 'Content-Type: application/json' \
 --data '{
-"driver_id": 18
+  "driver_id": 18
 }'
+
 
 
 Useful Commands
