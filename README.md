@@ -53,6 +53,9 @@ Once running, the API will be available at:
 
 http://localhost:8080
 
+The Swagger Open API can be found at:
+
+http://localhost:8080/swagger-ui
 
 ---
 
