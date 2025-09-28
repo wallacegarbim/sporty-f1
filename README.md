@@ -87,7 +87,7 @@ curl --location 'http://localhost:8080/events/9693/outcome' \
   "driver_id": 18
 }'
 
-It's possible to check the outcome result usiong a Mongo client and checking the users collection for the balance, and 
+It's possible to check the outcome result using a Mongo client and checking the users collection for the balance, and 
 the bets collection for the bets results.
 
 Useful Commands
